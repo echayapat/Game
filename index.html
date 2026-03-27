@@ -1,5 +1,121 @@
-<a style="padding: 20px 40px; font-size: 24px;">Hi</a>
-<button style="padding: 20px 40px; font-size: 24px;">
-  Hi
-</button>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Math Quiz Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
 
+        #game-container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        h1 { color: #333; }
+        #question { font-size: 24px; margin-bottom: 20px; font-weight: bold; }
+        #score { font-size: 18px; color: #666; margin-bottom: 10px; }
+        #feedback { font-size: 20px; height: 30px; margin-top: 15px; font-weight: bold; }
+
+        .btn-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .answer-btn {
+            padding: 20px;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            background-color: #007bff;
+            color: white;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .answer-btn:hover { background-color: #0056b3; transform: scale(1.02); }
+        .answer-btn:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <div id="score">Score: 0</div>
+        <div id="question">Loading question...</div>
+        
+        <div class="btn-container">
+            <button class="answer-btn" onclick="checkAnswer(0)"></button>
+            <button class="answer-btn" onclick="checkAnswer(1)"></button>
+            <button class="answer-btn" onclick="checkAnswer(2)"></button>
+            <button class="answer-btn" onclick="checkAnswer(3)"></button>
+        </div>
+
+        <div id="feedback"></div>
+    </div>
+
+    <script>
+        let score = 0;
+        let currentQuestion = {};
+        
+        // 7th Grade Math Questions
+        const questions = [
+            { q: "What is -5 + 8?", a: ["3", "-3", "13", "-13"], correct: 0 },
+            { q: "Solve: 2x = 10", a: ["2", "5", "8", "20"], correct: 1 },
+            { q: "Which is a prime number?", a: ["4", "9", "11", "15"], correct: 2 },
+            { q: "What is 10% of 200?", a: ["10", "2", "20", "50"], correct: 2 },
+            { q: "What is the square root of 49?", a: ["6", "7", "8", "9"], correct: 1 },
+            { q: "What is |-15|?", a: ["-15", "0", "15", "1.5"], correct: 2 }
+        ];
+
+        function nextQuestion() {
+            document.getElementById('feedback').innerText = "";
+            // Pick a random question
+            currentQuestion = questions[Math.floor(Math.random() * questions.length)];
+            
+            document.getElementById('question').innerText = currentQuestion.q;
+            const buttons = document.querySelectorAll('.answer-btn');
+            
+            // Set text for each button
+            buttons.forEach((btn, index) => {
+                btn.innerText = currentQuestion.a[index];
+            });
+        }
+
+        function checkAnswer(index) {
+            const feedback = document.getElementById('feedback');
+            
+            if (index === currentQuestion.correct) {
+                score++;
+                feedback.style.color = "green";
+                feedback.innerText = "Correct! +1 Score";
+            } else {
+                feedback.style.color = "red";
+                feedback.innerText = "You picked the wrong answer!";
+            }
+
+            document.getElementById('score').innerText = "Score: " + score;
+            
+            // Wait 1.5 seconds so user can read feedback, then move on
+            setTimeout(nextQuestion, 1500);
+        }
+
+        // Start the game
+        nextQuestion();
+    </script>
+
+</body>
+</html>
