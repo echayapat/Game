@@ -18,13 +18,23 @@
         
         #feedback { font-size: 22px; margin-top: 20px; height: 30px; font-weight: bold; }
         .hidden { display: none; }
-        #restart-btn { padding: 15px 30px; font-size: 20px; background: #e94560; color: white; border: none; border-radius: 10px; cursor: pointer; margin-top: 20px; }
+        
+        /* Menu Buttons */
+        .menu-btn { padding: 15px 40px; font-size: 24px; background: #e94560; color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s; }
+        .menu-btn:hover { transform: scale(1.05); background: #ff4d6d; }
     </style>
 </head>
 <body>
 
     <div id="game-container">
-        <div id="quiz-ui">
+        <div id="start-screen">
+            <h1>Math Challenge</h1>
+            <p>20 Questions. 10 Seconds Each.</p>
+            <br>
+            <button class="menu-btn" onclick="startGame()">START GAME</button>
+        </div>
+
+        <div id="quiz-ui" class="hidden">
             <div class="header-info">
                 <div>Score: <span id="score">0</span></div>
                 <div>Q: <span id="q-number">1</span>/20</div>
@@ -46,7 +56,7 @@
         <div id="result-screen" class="hidden">
             <h1>Finished!</h1>
             <p style="font-size: 24px;">Your Score: <span id="final-score">0</span>/20</p>
-            <button id="restart-btn" onclick="location.reload()">Restart Game</button>
+            <button class="menu-btn" onclick="location.reload()">Restart Game</button>
         </div>
     </div>
 
@@ -80,6 +90,17 @@
             { q: "Probability of Heads?", a: ["0", "1", "0.5", "0.25"], c: 2 }
         ];
 
+        // NEW: Function to trigger the game start
+        function startGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-ui').classList.remove('hidden');
+            
+            // Optional: Shuffle questions so it's fresh every time
+            mathData.sort(() => Math.random() - 0.5);
+            
+            loadQ();
+        }
+
         function runClock() {
             timeLeft = 10;
             document.getElementById('seconds').innerText = timeLeft;
@@ -90,7 +111,7 @@
                 document.getElementById('seconds').innerText = timeLeft;
                 if (timeLeft <= 0) {
                     clearInterval(clock);
-                    handleChoice(-1); // Fail due to time
+                    handleChoice(-1); 
                 }
             }, 1000);
         }
@@ -107,7 +128,7 @@
             feedback.innerText = "";
             document.getElementById('q-number').innerText = count + 1;
             
-            currentQ = mathData[count]; // Uses questions in order to ensure 20 unique ones
+            currentQ = mathData[count]; 
             document.getElementById('question').innerText = currentQ.q;
             
             const btns = document.querySelectorAll('.answer-btn');
@@ -141,8 +162,6 @@
             count++;
             setTimeout(loadQ, 1200);
         }
-
-        loadQ();
     </script>
 </body>
 </html>
